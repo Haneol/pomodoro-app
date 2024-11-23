@@ -2,16 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/homeFragment"
-        android:icon="@drawable/ic_home"
-        android:title="홈" />
+        android:icon="@drawable/ic_timer"
+        android:title="Pomo" />
 
     <item
         android:id="@+id/trackFragment"
         android:icon="@drawable/ic_track"
-        android:title="기록" />
+        android:title="Track" />
 
     <item
         android:id="@+id/notificationsFragment"
-        android:icon="@drawable/ic_settings"
-        android:title="설정" />
+        android:icon="@drawable/ic_setting"
+        android:title="Setting" />
 </menu>
