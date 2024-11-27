@@ -5,16 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.pomodoro.adapter.TimerSetAdapter
+import com.example.pomodoro.data.TimerItem
+import com.example.pomodoro.data.TimerSet
 import com.example.pomodoro.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private var isStart = false
-        set(value) {
-            field = value
-            updateButtonUI()
-        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,39 +28,30 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // 여기서 뷰 초기화 및 이벤트 처리
         setupViews()
+        setupRecyclerView()
     }
 
     private fun setupViews() {
         // 뷰 설정 및 이벤트 처리 코드
-        binding.timerButton.apply {
-            text = "시작"  // 초기 상태
-            setOnClickListener {
-                isStart = !isStart  // 상태 토글만 하면 UI는 자동으로 업데이트
-                handleTimerState()
+
+
+    }
+
+
+    private fun setupRecyclerView() {
+        binding.rvTimerSets.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = TimerSetAdapter().apply {
+                submitList(createSampleData())
             }
         }
-
     }
 
-    private fun updateButtonUI() {
-        binding.timerButton.text = if (isStart) "중지" else "시작"
-    }
-
-    private fun handleTimerState() {
-        if (isStart) {
-            // startTimer()
-        } else {
-            // stopTimer()
-        }
-    }
-
-    private fun startTimer() {
-
-    }
-
-    private fun stopTimer() {
-
-    }
+    private fun createSampleData() = listOf(
+        TimerSet(1, List(4) { TimerItem(it + 1, "00:00") }),
+        TimerSet(2, List(4) { TimerItem(it + 1, "25:00") }),
+        TimerSet(3, List(4) { TimerItem(it + 1, "25:00") })
+    )
 
     override fun onDestroyView() {
         super.onDestroyView()

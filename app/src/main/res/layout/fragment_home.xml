@@ -6,10 +6,12 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/timerButton"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:textSize="24sp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTimerSets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp" />
 
 </LinearLayout>
