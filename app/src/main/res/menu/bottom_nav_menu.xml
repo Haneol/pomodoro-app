@@ -3,15 +3,15 @@
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_timer"
-        android:title="Pomo" />
+        android:title="뽀모" />
 
     <item
         android:id="@+id/trackFragment"
         android:icon="@drawable/ic_track"
-        android:title="Track" />
+        android:title="기록" />
 
     <item
         android:id="@+id/notificationsFragment"
         android:icon="@drawable/ic_setting"
-        android:title="Setting" />
+        android:title="설정" />
 </menu>

@@ -1,3 +1,26 @@
 <resources>
-    <string name="app_name">pomodoro</string>
+    <string name="app_name">Pomodoro</string>
+
+    <!-- Timer Controls -->
+    <string name="start">시작</string>
+    <string name="pause">일시정지</string>
+    <string name="resume">재개</string>
+    <string name="stop">정지</string>
+
+    <!-- Dialog Texts -->
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
+    <string name="reset_timer">타이머 초기화</string>
+    <string name="reset_timer_confirmation">타이머를 초기화하시겠습니까?</string>
+
+    <!-- Permission Related -->
+    <string name="permission_required">권한 필요</string>
+    <string name="permission_explanation">타이머 알림을 위해 알림 권한이 필요합니다. 설정에서 권한을 허용해주세요.</string>
+    <string name="permission_alarm_explanation">정확한 타이머 동작을 위해 정확한 알람 권한이 필요합니다.</string>
+    <string name="go_to_settings">설정으로 이동</string>
+
+    <!-- Timer Notifications -->
+    <string name="timer_notification_channel_name">포모도로 타이머</string>
+    <string name="timer_notification_channel_description">타이머 진행 상황 및 알림</string>
+    <string name="timer_complete">타이머 완료!</string>
 </resources>
