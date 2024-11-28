@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.pomodoro.R
 import com.example.pomodoro.adapter.TrackSetAdapter
 import com.example.pomodoro.data.TrackSetData
 import com.example.pomodoro.databinding.FragmentTrackBinding
@@ -34,7 +35,7 @@ class TrackFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        // 테스트용 데이터 생성
+        setupDateButton()  // 날짜 버튼 설정 추가
         loadTestData()
     }
 
@@ -45,20 +46,7 @@ class TrackFragment : Fragment() {
         }
     }
 
-    private fun loadTestData() {
-        // 테스트용 데이터
-        val testData = listOf(
-            TrackSetData("1 세트", "02 : 00 : 00"),
-            TrackSetData("2 세트", "02 : 00 : 00"),
-            TrackSetData("3 세트", "02 : 00 : 00")
-        )
-        trackSetAdapter.submitList(testData)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-
+    private fun setupDateButton() {
         // 오늘 날짜를 버튼에 표시
         updateDateButton()
 
@@ -74,9 +62,19 @@ class TrackFragment : Fragment() {
         }
     }
 
+    private fun loadTestData() {
+        // 테스트용 데이터
+        val testData = listOf(
+            TrackSetData("1 세트", "02 : 00 : 00"),
+            TrackSetData("2 세트", "02 : 00 : 00"),
+            TrackSetData("3 세트", "02 : 00 : 00")
+        )
+        trackSetAdapter.submitList(testData)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        _binding = null  // binding null 처리만 남김
     }
 
     // 날짜 선택 대화상자 표시
@@ -100,7 +98,8 @@ class TrackFragment : Fragment() {
 
         // 오늘 날짜 기준으로 6개월(180일) 캘린더 제한 설정
         val today = Calendar.getInstance()
-        datePickerDialog.datePicker.minDate = today.timeInMillis - 180L * 24 * 60 * 60 * 1000 // 180일 전
+        datePickerDialog.datePicker.minDate =
+            today.timeInMillis - 180L * 24 * 60 * 60 * 1000 // 180일 전
         datePickerDialog.datePicker.maxDate = today.timeInMillis
         datePickerDialog.show()
     }
