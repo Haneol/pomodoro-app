@@ -11,6 +11,7 @@ import com.example.pomodoro.databinding.ItemTrackSetBinding
 class TrackSetAdapter : RecyclerView.Adapter<TrackSetAdapter.TrackSetViewHolder>() {
 
     private var trackSetList = mutableListOf<TrackSetData>()
+    var onContentChanged: ((String, String) -> Unit)? = null
 
     inner class TrackSetViewHolder(private val binding: ItemTrackSetBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(trackSetData: TrackSetData) {
@@ -24,7 +25,10 @@ class TrackSetAdapter : RecyclerView.Adapter<TrackSetAdapter.TrackSetViewHolder>
                     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                     override fun afterTextChanged(p0: Editable?) {
-                        trackSetData.content = p0.toString()
+                        val newContent = p0.toString()
+                        trackSetData.content = newContent
+                        // 콜백 호출 추가
+                        onContentChanged?.invoke(trackSetData.setNumber, newContent)
                     }
                 })
             }

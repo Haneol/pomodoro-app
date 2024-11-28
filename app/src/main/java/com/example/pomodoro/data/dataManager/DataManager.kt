@@ -30,6 +30,18 @@ class DataManager(private val context: Context) {
         return TimerSettings(duration)
     }
 
+    // Content 저장
+    fun saveSetContent(date: String, setNumber: Int, content: String) {
+        sharedPreferences.edit()
+            .putString("set_content_${date}_${setNumber}", content)
+            .apply()
+    }
+
+    // Content 로드
+    fun loadSetContent(date: String, setNumber: Int): String {
+        return sharedPreferences.getString("set_content_${date}_${setNumber}", "") ?: ""
+    }
+
     fun saveTimerSets(timerSets: List<TimerSet>, date: String = getTodaysDate()) {
         val editor = sharedPreferences.edit()
         editor.putInt("timer_sets_count_$date", timerSets.size)
