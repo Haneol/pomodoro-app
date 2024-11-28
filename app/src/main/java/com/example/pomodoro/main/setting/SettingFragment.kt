@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.pomodoro.R
 import com.example.pomodoro.databinding.FragmentSettingBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -60,6 +61,7 @@ class SettingFragment : Fragment() {
 
         val datePickerDialog = DatePickerDialog(
             requireContext(),
+            R.style.CustomDatePickerTheme,
             { _, pickedYear, pickedMonth, pickedDay ->
                 selectedDate.set(pickedYear, pickedMonth, pickedDay)
                 updateDateButton()
