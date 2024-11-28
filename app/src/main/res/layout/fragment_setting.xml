@@ -29,12 +29,18 @@
     </androidx.cardview.widget.CardView>
     <!-- 선택 카드 -->
     <androidx.cardview.widget.CardView
+        android:id="@+id/cvTimerSelect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="#D9D9D9"
-        app:cardCornerRadius="10dp"
-        android:layout_gravity="center_horizontal">
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        android:stateListAnimator="@animator/card_press">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,6 +68,7 @@
 
             <!-- 오른쪽 텍스트 -->
             <TextView
+                android:id="@+id/tvTimerDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"
@@ -74,11 +81,17 @@
 
     <!-- 삭제 카드 -->
     <androidx.cardview.widget.CardView
+        android:id="@+id/cvDataReset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="#D9D9D9"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        android:stateListAnimator="@animator/card_press">
 
         <LinearLayout
             android:layout_width="match_parent"

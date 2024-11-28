@@ -24,11 +24,14 @@ import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
 import android.util.Log
 import com.example.pomodoro.data.TimerItem
 import com.example.pomodoro.data.TimerSettings
+import com.example.pomodoro.data.dataManager.DataManager
 
 class TimerService : Service() {
     private val NOTIFICATION_CHANNEL_ID = "POMODORO_TIMER_CHANNEL"
     private val NOTIFICATION_ID = 1
-    private val TIMER_DURATION = TimerSettings().defaultDuration
+
+    private lateinit var dataManager: DataManager
+    private var timerDuration: Long = 0L
 
     private val binder = LocalBinder()
     private val handler = Handler(Looper.getMainLooper())
@@ -37,7 +40,7 @@ class TimerService : Service() {
 
     private var startTime: Long = 0L
     private var targetTime: Long = 0L
-    private var timeLeftInMillis: Long = TIMER_DURATION
+    private var timeLeftInMillis: Long = 0L
     private var timerState = TimerState.IDLE
 
     // LiveData for UI updates
@@ -63,13 +66,23 @@ class TimerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        dataManager = DataManager(this)
+        timerDuration = dataManager.loadTimerSettings().defaultDuration
+
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         createNotificationChannel()
         setupAlarmIntent()
 
         // 서비스 생성 시 초기 시간 설정
-        _timeLeft.postValue(TIMER_DURATION)
+        timeLeftInMillis = timerDuration
+        _timeLeft.postValue(timerDuration)
         _state.postValue(TimerState.IDLE)
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // 서비스가 시작될 때마다 최신 설정 가져오기
+        timerDuration = dataManager.loadTimerSettings().defaultDuration
+        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -86,11 +99,14 @@ class TimerService : Service() {
 
     fun startTimer() {
         if (timerState == TimerState.IDLE || timerState == TimerState.PAUSED) {
-            // 먼저 서비스를 시작
+            // 타이머 시작 전에 최신 설정 확인
+            timerDuration = dataManager.loadTimerSettings().defaultDuration
+
+            // 서비스를 시작
             startService(Intent(applicationContext, TimerService::class.java))
 
             if (timerState == TimerState.IDLE) {
-                timeLeftInMillis = TIMER_DURATION
+                timeLeftInMillis = timerDuration
             }
 
             startTime = System.currentTimeMillis()
@@ -146,7 +162,9 @@ class TimerService : Service() {
         handler.removeCallbacks(updateTimerRunnable)
         alarmManager.cancel(timerPendingIntent)
 
-        timeLeftInMillis = TIMER_DURATION
+        timerDuration = dataManager.loadTimerSettings().defaultDuration
+        timeLeftInMillis = timerDuration
+
         timerState = TimerState.IDLE
         _state.postValue(timerState)
         _timeLeft.postValue(timeLeftInMillis)
