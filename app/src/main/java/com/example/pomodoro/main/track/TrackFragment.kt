@@ -41,7 +41,6 @@ class TrackFragment : Fragment() {
 
         setupRecyclerView()
         setupDateButton()  // 날짜 버튼 설정 추가
-        loadTestData()
     }
 
     private fun setupRecyclerView() {
@@ -69,15 +68,6 @@ class TrackFragment : Fragment() {
             resetToToday() // 오늘 날짜로 초기화
             true // 이벤트 소비 표시
         }
-    }
-
-    private fun loadTestData() {
-        // 테스트용 데이터
-        val testData = listOf(
-            TrackSetData("1 세트", "00 : 00 : 08"),
-            TrackSetData("2 세트", "00 : 00 : 03"),
-        )
-        trackSetAdapter.submitList(testData)
     }
 
     override fun onDestroyView() {
