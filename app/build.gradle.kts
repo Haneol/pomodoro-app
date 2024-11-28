@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.pomodoro"
-        minSdk = 26
+        minSdk = 29
         targetSdk = 35
 
         versionCode = 1
@@ -52,4 +52,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
 }

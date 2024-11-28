@@ -1,0 +1,11 @@
+<resources>
+    <style name="CustomDatePickerTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">#F46F6F</item>
+        <item name="colorPrimaryVariant">#F46F6F</item>
+        <item name="colorOnPrimary">#F46F6F</item>
+
+        <item name="colorAccent">#F46F6F</item>
+
+    </style>
+
+</resources>
