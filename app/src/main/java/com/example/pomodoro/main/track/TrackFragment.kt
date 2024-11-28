@@ -1,5 +1,6 @@
 package com.example.pomodoro.main.track
 
+import android.app.DatePickerDialog
 import android.app.AlertDialog
 import android.content.ComponentName
 import android.content.Context
@@ -17,12 +18,15 @@ import com.example.pomodoro.handler.PermissionCallback
 import com.example.pomodoro.handler.TimerPermissionHandler
 import com.example.pomodoro.service.TimerService
 import com.example.pomodoro.service.TimerState
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 class TrackFragment : Fragment(), PermissionCallback {
     private var _binding: FragmentTrackBinding? = null
     private val binding get() = _binding!!
 
+    private var selectedDate: Calendar = Calendar.getInstance()
     private var timerService: TimerService? = null
     private var bound = false
     private lateinit var permissionHandler: TimerPermissionHandler
@@ -58,6 +62,16 @@ class TrackFragment : Fragment(), PermissionCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 날짜 선택 및 초기화 관련
+        updateDateButton()
+        binding.dateButton.setOnClickListener { showDatePickerDialog() }
+        binding.dateButton.setOnLongClickListener {
+            resetToToday()
+            true
+        }
+
+        // 타이머 관련 설정
         setupViews()
         checkPermissionsAndBindService()
     }
@@ -151,7 +165,6 @@ class TrackFragment : Fragment(), PermissionCallback {
         }
     }
 
-    // PermissionCallback 구현
     override fun onPermissionsGranted() {
         bindTimerService()
     }
@@ -179,10 +192,48 @@ class TrackFragment : Fragment(), PermissionCallback {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if (bound) {
-            requireContext().unbindService(connection)
-            bound = false
-        }
         _binding = null
+    }
+
+    // 날짜 관련 메서드
+    private fun showDatePickerDialog() {
+        val year = selectedDate.get(Calendar.YEAR)
+        val month = selectedDate.get(Calendar.MONTH)
+        val day = selectedDate.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            R.style.CustomDatePickerTheme,
+            { _, pickedYear, pickedMonth, pickedDay ->
+                selectedDate.set(pickedYear, pickedMonth, pickedDay)
+                updateDateButton()
+                loadDataForSelectedDate()
+            },
+            year,
+            month,
+            day
+        )
+
+        val today = Calendar.getInstance()
+        datePickerDialog.datePicker.minDate = today.timeInMillis - 180L * 24 * 60 * 60 * 1000
+        datePickerDialog.datePicker.maxDate = today.timeInMillis
+        datePickerDialog.show()
+    }
+
+    private fun updateDateButton() {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        binding.dateButton.text = dateFormat.format(selectedDate.time)
+    }
+
+    private fun loadDataForSelectedDate() {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val selectedDateString = dateFormat.format(selectedDate.time)
+        // 데이터 표시: 추가 구현 필요
+    }
+
+    private fun resetToToday() {
+        selectedDate = Calendar.getInstance()
+        updateDateButton()
+        loadDataForSelectedDate()
     }
 }
