@@ -22,11 +22,12 @@ import com.example.pomodoro.R
 import java.util.Locale
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
 import android.util.Log
+import com.example.pomodoro.data.TimerItem
 
 class TimerService : Service() {
     private val NOTIFICATION_CHANNEL_ID = "POMODORO_TIMER_CHANNEL"
     private val NOTIFICATION_ID = 1
-    private val TIMER_DURATION = 5 * 1000L // 25 minutes in milliseconds
+    private val TIMER_DURATION = TimerItem.INIT_TIME
 
     private val binder = LocalBinder()
     private val handler = Handler(Looper.getMainLooper())

@@ -24,6 +24,7 @@ import com.example.pomodoro.handler.TimerPermissionHandler
 import com.example.pomodoro.service.TimerService
 import com.example.pomodoro.service.TimerState
 import java.util.Locale
+import java.util.Timer
 
 class HomeFragment : Fragment(), PermissionCallback {
     private var _binding: FragmentHomeBinding? = null
@@ -95,7 +96,7 @@ class HomeFragment : Fragment(), PermissionCallback {
                     timerItems = List(4) { position ->
                         TimerItem(
                             position = position + 1,
-                            duration = "25:00",
+                            duration = TimerItem.INIT_TIME_TO_STR,
                             isActive = position == 0,
                             state = if (position == 0) TimerItemState.IN_PROGRESS
                             else TimerItemState.NOT_STARTED
@@ -123,7 +124,7 @@ class HomeFragment : Fragment(), PermissionCallback {
                 timerItems = List(4) { position ->
                     TimerItem(
                         position = position + 1,
-                        duration = "25:00",
+                        duration = TimerItem.INIT_TIME_TO_STR,
                         isActive = position == 0,  // 첫 번째 아이템만 활성화
                         state = if (position == 0) TimerItemState.IN_PROGRESS else TimerItemState.NOT_STARTED
                     )
