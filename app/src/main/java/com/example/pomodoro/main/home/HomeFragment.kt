@@ -68,16 +68,59 @@ class HomeFragment : Fragment(), PermissionCallback {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        Log.d("HomeFragment", "onResume called")
+
+        // 설정값 가져오기
+        val settings = dataManager.loadTimerSettings()
+        val newDurationFormatted = settings.getFormattedTime()
+
+        // 저장된 데이터가 있으면 로드
+        if (dataManager.hasTimerSets()) {
+            Log.d("HomeFragment", "Loading saved timer sets")
+            val savedTimerSets = dataManager.loadTimerSets()
+
+            // 설정이 변경되었다면 진행중이 아닌 타이머들의 duration 업데이트
+            val updatedSets = savedTimerSets.map { set ->
+                set.copy(
+                    timerItems = set.timerItems.map { item ->
+                        if (item.state == TimerItemState.NOT_STARTED) {
+                            item.copy(
+                                duration = newDurationFormatted,
+                                currentTimeLeft = newDurationFormatted
+                            )
+                        } else {
+                            item
+                        }
+                    }
+                )
+            }
+
+            timerSets = updatedSets
+            timerSetAdapter.submitList(updatedSets)
+            dataManager.saveTimerSets(updatedSets)
+        } else {
+            Log.d("HomeFragment", "Loading initial data")
+            timerSets = createInitialData()
+            timerSetAdapter.submitList(timerSets)
+            dataManager.saveTimerSets(timerSets)
+        }
+    }
+
     private fun createInitialData(): List<TimerSet> {
+        val settings = dataManager.loadTimerSettings()
         return listOf(
             TimerSet(
                 setNumber = 1,
                 timerItems = List(4) { position ->
                     TimerItem(
                         position = position + 1,
-                        duration = timerSettings.getFormattedTime(),
+                        duration = settings.getFormattedTime(),
                         isActive = position == 0,  // 첫 번째 아이템만 활성화
-                        state = if (position == 0) TimerItemState.IN_PROGRESS else TimerItemState.NOT_STARTED
+                        state = if (position == 0) TimerItemState.IN_PROGRESS else TimerItemState.NOT_STARTED,
+                        currentTimeLeft = settings.getFormattedTime()
                     )
                 }
             )
@@ -98,20 +141,7 @@ class HomeFragment : Fragment(), PermissionCallback {
         setupViews()
         setupRecyclerView()
         checkPermissionsAndBindService()
-
-//        binding.button.setOnClickListener {
-//            resetAllData()
-//            timerSets = dataManager.loadTimerSets()
-//            timerSetAdapter.submitList(timerSets)
-//            timerSetAdapter.notifyDataSetChanged()
-//        }
     }
-
-//    fun resetAllData() {
-//        dataManager.clearAllData()
-//        timerSets = createInitialData()
-//        dataManager.saveTimerSets(timerSets)
-//    }
 
     private fun setupViews() {
         binding.fab.setOnClickListener {
@@ -131,8 +161,30 @@ class HomeFragment : Fragment(), PermissionCallback {
     private fun setupRecyclerView() {
         timerSetAdapter = TimerSetAdapter(
             onAddButtonClick = {
-                val nextSetNumber = (timerSetAdapter.itemCount)
-                val newSet = createNewTimerSet()
+                // 1. 현재 활성화된 아이템이 있다면 비활성화
+                timerSets.forEach { set ->
+                    set.timerItems.forEach { item ->
+                        if (item.isActive) {
+                            item.isActive = false
+                            item.state = TimerItemState.NOT_STARTED
+                        }
+                    }
+                }
+
+                // 2. 새로운 세트 생성하고 첫 번째 아이템 활성화
+                val newSet = createNewTimerSet().let { set ->
+                    set.copy(
+                        timerItems = set.timerItems.mapIndexed { index, item ->
+                            if (index == 0) {
+                                item.copy(isActive = true, state = TimerItemState.IN_PROGRESS)
+                            } else {
+                                item
+                            }
+                        }
+                    )
+                }
+
+                // 3. 새로운 세트 추가
                 timerSets = timerSets.toMutableList().also { it.add(newSet) }
                 timerSetAdapter.submitList(timerSets)
 
@@ -149,15 +201,17 @@ class HomeFragment : Fragment(), PermissionCallback {
     }
 
     private fun createNewTimerSet(): TimerSet {
+        val settings = dataManager.loadTimerSettings()
         val nextSetNumber = timerSets.size + 1
         return TimerSet(
             setNumber = nextSetNumber,
             timerItems = List(4) { position ->
                 TimerItem(
                     position = position + 1,
-                    duration = timerSettings.getFormattedTime(),
-                    isActive = position == 0,
-                    state = if (position == 0) TimerItemState.IN_PROGRESS else TimerItemState.NOT_STARTED
+                    duration = settings.getFormattedTime(),
+                    isActive = false,
+                    state = if (position == 0) TimerItemState.IN_PROGRESS else TimerItemState.NOT_STARTED,
+                    currentTimeLeft = settings.getFormattedTime()
                 )
             }
         )

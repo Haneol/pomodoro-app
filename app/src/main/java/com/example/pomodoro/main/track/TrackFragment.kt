@@ -10,11 +10,13 @@ import com.example.pomodoro.adapter.TrackSetAdapter
 import com.example.pomodoro.data.TrackSetData
 import com.example.pomodoro.databinding.FragmentTrackBinding
 
+
 class TrackFragment : Fragment() {
 
     private var _binding: FragmentTrackBinding? = null
     private val binding get() = _binding!!
     private val trackSetAdapter = TrackSetAdapter()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,6 +29,7 @@ class TrackFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         setupRecyclerView()
         // 테스트용 데이터 생성
@@ -53,5 +56,7 @@ class TrackFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+
+
     }
 }
