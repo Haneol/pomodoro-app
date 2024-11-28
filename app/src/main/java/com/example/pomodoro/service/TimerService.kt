@@ -21,6 +21,7 @@ import com.example.pomodoro.MainActivity
 import com.example.pomodoro.R
 import java.util.Locale
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+import android.util.Log
 
 class TimerService : Service() {
     private val NOTIFICATION_CHANNEL_ID = "POMODORO_TIMER_CHANNEL"
@@ -154,7 +155,11 @@ class TimerService : Service() {
     private fun updateTimer() {
         timeLeftInMillis = targetTime - System.currentTimeMillis()
         if (timeLeftInMillis <= 0) {
-            resetTimer()
+            Log.d("TimerService", "Timer finished: timeLeftInMillis = $timeLeftInMillis")
+            _timeLeft.postValue(0L)  // 먼저 0을 전달
+            handler.postDelayed({  // 약간의 딜레이 후 리셋
+                resetTimer()
+            }, 100)
         } else {
             _timeLeft.postValue(timeLeftInMillis)
             updateNotification()
