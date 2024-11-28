@@ -32,8 +32,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="#D9D9D9"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        android:stateListAnimator="@animator/card_press">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,9 +81,14 @@
         android:id="@+id/cvDataReset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="#D9D9D9"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        android:stateListAnimator="@animator/card_press">
 
         <LinearLayout
             android:layout_width="match_parent"
