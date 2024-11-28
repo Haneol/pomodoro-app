@@ -28,9 +28,9 @@ class SettingFragment : Fragment() {
 
     private fun setupViews() {
         // 뷰 설정 및 이벤트 처리 코드
-        binding.textView3.setOnClickListener {
+//        binding.textView3.setOnClickListener {
             // 클릭 이벤트 처리
-        }
+//        }
     }
 
     override fun onDestroyView() {
