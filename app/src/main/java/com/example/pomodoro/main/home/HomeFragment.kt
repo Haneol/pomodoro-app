@@ -18,23 +18,29 @@ import com.example.pomodoro.adapter.TimerSetAdapter
 import com.example.pomodoro.data.TimerItem
 import com.example.pomodoro.data.TimerItemState
 import com.example.pomodoro.data.TimerSet
+import com.example.pomodoro.data.TimerSettings
+import com.example.pomodoro.data.dataManager.DataManager
 import com.example.pomodoro.databinding.FragmentHomeBinding
 import com.example.pomodoro.handler.PermissionCallback
 import com.example.pomodoro.handler.TimerPermissionHandler
 import com.example.pomodoro.service.TimerService
 import com.example.pomodoro.service.TimerState
 import java.util.Locale
-import java.util.Timer
 
 class HomeFragment : Fragment(), PermissionCallback {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    private val dataManager by lazy { DataManager(requireContext()) }
+    private var timerSets: List<TimerSet> = emptyList()
 
     private lateinit var timerSetAdapter: TimerSetAdapter
     private lateinit var permissionHandler: TimerPermissionHandler
 
     private var timerService: TimerService? = null
     private var bound = false
+
+    private val timerSettings = TimerSettings()
 
     // Service Connection
     private val connection = object : ServiceConnection {
@@ -54,6 +60,28 @@ class HomeFragment : Fragment(), PermissionCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         permissionHandler = TimerPermissionHandler(this, this)
+        if (dataManager.hasTimerSets()) {
+            timerSets = dataManager.loadTimerSets()
+        } else {
+            timerSets = createInitialData()
+            dataManager.saveTimerSets(timerSets)
+        }
+    }
+
+    private fun createInitialData(): List<TimerSet> {
+        return listOf(
+            TimerSet(
+                setNumber = 1,
+                timerItems = List(4) { position ->
+                    TimerItem(
+                        position = position + 1,
+                        duration = timerSettings.getFormattedTime(),
+                        isActive = position == 0,  // 첫 번째 아이템만 활성화
+                        state = if (position == 0) TimerItemState.IN_PROGRESS else TimerItemState.NOT_STARTED
+                    )
+                }
+            )
+        )
     }
 
     override fun onCreateView(
@@ -70,7 +98,20 @@ class HomeFragment : Fragment(), PermissionCallback {
         setupViews()
         setupRecyclerView()
         checkPermissionsAndBindService()
+
+//        binding.button.setOnClickListener {
+//            resetAllData()
+//            timerSets = dataManager.loadTimerSets()
+//            timerSetAdapter.submitList(timerSets)
+//            timerSetAdapter.notifyDataSetChanged()
+//        }
     }
+
+//    fun resetAllData() {
+//        dataManager.clearAllData()
+//        timerSets = createInitialData()
+//        dataManager.saveTimerSets(timerSets)
+//    }
 
     private fun setupViews() {
         binding.fab.setOnClickListener {
@@ -91,19 +132,9 @@ class HomeFragment : Fragment(), PermissionCallback {
         timerSetAdapter = TimerSetAdapter(
             onAddButtonClick = {
                 val nextSetNumber = (timerSetAdapter.itemCount)
-                val newSet = TimerSet(
-                    setNumber = nextSetNumber,
-                    timerItems = List(4) { position ->
-                        TimerItem(
-                            position = position + 1,
-                            duration = TimerItem.INIT_TIME_TO_STR,
-                            isActive = position == 0,
-                            state = if (position == 0) TimerItemState.IN_PROGRESS
-                            else TimerItemState.NOT_STARTED
-                        )
-                    }
-                )
-                timerSetAdapter.addSet(newSet)
+                val newSet = createNewTimerSet()
+                timerSets = timerSets.toMutableList().also { it.add(newSet) }
+                timerSetAdapter.submitList(timerSets)
 
                 timerService?.resetTimer()
             }
@@ -112,24 +143,23 @@ class HomeFragment : Fragment(), PermissionCallback {
         binding.rvTimerSets.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = timerSetAdapter.apply {
-                submitList(createInitialData())
+                submitList(timerSets)
             }
         }
     }
 
-    private fun createInitialData(): List<TimerSet> {
-        return listOf(
-            TimerSet(
-                setNumber = 1,
-                timerItems = List(4) { position ->
-                    TimerItem(
-                        position = position + 1,
-                        duration = TimerItem.INIT_TIME_TO_STR,
-                        isActive = position == 0,  // 첫 번째 아이템만 활성화
-                        state = if (position == 0) TimerItemState.IN_PROGRESS else TimerItemState.NOT_STARTED
-                    )
-                }
-            )
+    private fun createNewTimerSet(): TimerSet {
+        val nextSetNumber = timerSets.size + 1
+        return TimerSet(
+            setNumber = nextSetNumber,
+            timerItems = List(4) { position ->
+                TimerItem(
+                    position = position + 1,
+                    duration = timerSettings.getFormattedTime(),
+                    isActive = position == 0,
+                    state = if (position == 0) TimerItemState.IN_PROGRESS else TimerItemState.NOT_STARTED
+                )
+            }
         )
     }
 
@@ -230,6 +260,7 @@ class HomeFragment : Fragment(), PermissionCallback {
                 service.startTimer()
             }
         }
+        dataManager.saveTimerSets(timerSets)
     }
 
     private fun bindTimerService() {
@@ -271,5 +302,6 @@ class HomeFragment : Fragment(), PermissionCallback {
             bound = false
         }
         _binding = null
+        dataManager.saveTimerSets(timerSets)
     }
 }
