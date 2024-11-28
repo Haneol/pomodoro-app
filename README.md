@@ -1,6 +1,7 @@
 ![logo](https://github.com/user-attachments/assets/39efd321-40b8-44b6-96b2-feac6d935368)
 # 뽀모도로 타이머 앱
-![UI](https://github.com/user-attachments/assets/bd7ff99f-b9da-4f20-aa93-75c120edccda)
+![UI](https://github.com/user-attachments/assets/02c30450-30a7-4de4-b0c5-db78916f271c)
+
 
 ## 🍅 개요
 - **Android Studio**를 사용하여 개발한 뽀모도로 타이머 앱

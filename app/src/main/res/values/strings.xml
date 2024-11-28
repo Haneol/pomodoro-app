@@ -12,6 +12,8 @@
     <string name="cancel">취소</string>
     <string name="reset_timer">타이머 초기화</string>
     <string name="reset_timer_confirmation">타이머를 초기화하시겠습니까?</string>
+    <string name="reset_data">데이터 초기화</string>
+    <string name="reset_data_confirmation">데이터를 초기화하시겠습니까?</string>
 
     <!-- Permission Related -->
     <string name="permission_required">권한 필요</string>

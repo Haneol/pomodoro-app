@@ -4,10 +4,31 @@ import android.content.Context
 import com.example.pomodoro.data.TimerItem
 import com.example.pomodoro.data.TimerItemState
 import com.example.pomodoro.data.TimerSet
+import com.example.pomodoro.data.TimerSettings
 import java.util.Calendar
 
 class DataManager(private val context: Context) {
     private val sharedPreferences = context.getSharedPreferences("pomodoro_data", Context.MODE_PRIVATE)
+
+    // TimerSettings 관련 키 값
+    private companion object {
+        const val KEY_TIMER_DURATION = "timer_duration"
+        const val DEFAULT_TIMER_DURATION = 25 * 60 * 1000L // 25분을 밀리초로
+    }
+
+    // TimerSettings 저장
+    fun saveTimerSettings(settings: TimerSettings) {
+        sharedPreferences.edit().apply {
+            putLong(KEY_TIMER_DURATION, settings.defaultDuration)
+            apply()
+        }
+    }
+
+    // TimerSettings 로드
+    fun loadTimerSettings(): TimerSettings {
+        val duration = sharedPreferences.getLong(KEY_TIMER_DURATION, DEFAULT_TIMER_DURATION)
+        return TimerSettings(duration)
+    }
 
     fun saveTimerSets(timerSets: List<TimerSet>, date: String = getTodaysDate()) {
         val editor = sharedPreferences.edit()
