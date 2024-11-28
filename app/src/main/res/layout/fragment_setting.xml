@@ -66,6 +66,7 @@
 
             <!-- 오른쪽 텍스트 -->
             <TextView
+                android:id="@+id/tvTimerDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"
