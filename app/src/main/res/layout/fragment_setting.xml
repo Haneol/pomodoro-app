@@ -27,12 +27,13 @@
     </androidx.cardview.widget.CardView>
     <!-- 선택 카드 -->
     <androidx.cardview.widget.CardView
+        android:id="@+id/cvTimerSelect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         app:cardBackgroundColor="#D9D9D9"
-        app:cardCornerRadius="10dp"
-        android:layout_gravity="center_horizontal">
+        app:cardCornerRadius="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,6 +73,7 @@
 
     <!-- 삭제 카드 -->
     <androidx.cardview.widget.CardView
+        android:id="@+id/cvDataReset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
