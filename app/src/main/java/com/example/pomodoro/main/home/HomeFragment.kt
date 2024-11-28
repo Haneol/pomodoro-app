@@ -14,6 +14,7 @@ import com.example.pomodoro.databinding.FragmentHomeBinding
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private lateinit var timerSetAdapter: TimerSetAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,18 +40,32 @@ class HomeFragment : Fragment() {
 
 
     private fun setupRecyclerView() {
+        timerSetAdapter = TimerSetAdapter(
+            onAddButtonClick = {
+                // 현재 세트 개수를 기반으로 새로운 세트 번호 생성
+                val nextSetNumber = (timerSetAdapter.itemCount)
+
+                // 새로운 TimerSet 생성
+                val newSet = TimerSet(
+                    setNumber = nextSetNumber,
+                    timerItems = List(4) { TimerItem(it + 1, "25:00") }
+                )
+
+                // 어댑터에 새로운 세트 추가
+                timerSetAdapter.addSet(newSet)
+            }
+        )
+
         binding.rvTimerSets.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = TimerSetAdapter().apply {
+            adapter = timerSetAdapter.apply {
                 submitList(createSampleData())
             }
         }
     }
 
     private fun createSampleData() = listOf(
-        TimerSet(1, List(4) { TimerItem(it + 1, "00:00") }),
-        TimerSet(2, List(4) { TimerItem(it + 1, "25:00") }),
-        TimerSet(3, List(4) { TimerItem(it + 1, "25:00") })
+        TimerSet(1, List(4) { TimerItem(it + 1, "25:00") }),
     )
 
     override fun onDestroyView() {

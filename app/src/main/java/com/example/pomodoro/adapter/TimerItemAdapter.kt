@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pomodoro.R
 import com.example.pomodoro.data.TimerItem
 import com.example.pomodoro.databinding.ItemTimerBinding
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -30,8 +31,8 @@ class TimerItemAdapter : RecyclerView.Adapter<TimerItemAdapter.ItemViewHolder>()
         val item = items[position]
         holder.binding.apply {
             root.shapeAppearanceModel = ShapeAppearanceModel.builder()
-                .setTopLeftCornerSize(if (position == 0) 8f.dpToPx() else 0f)
-                .setTopRightCornerSize(if (position == 0) 8f.dpToPx() else 0f)
+                .setTopLeftCornerSize(if (position == 0) 20f.dpToPx() else 0f)
+                .setTopRightCornerSize(if (position == 0) 20f.dpToPx() else 0f)
                 .setBottomLeftCornerSize(if (position == items.lastIndex) 8f.dpToPx() else 0f)
                 .setBottomRightCornerSize(if (position == items.lastIndex) 8f.dpToPx() else 0f)
                 .build()
@@ -45,10 +46,12 @@ class TimerItemAdapter : RecyclerView.Adapter<TimerItemAdapter.ItemViewHolder>()
                 }
             )
 
-            tvPosition.setTextColor(if (item.isActive) Color.WHITE else Color.parseColor("#666666"))
-            tvDuration.setTextColor(if (item.isActive) Color.WHITE else Color.parseColor("#333333"))
+            tvPosition.setTextColor(if (item.isActive) Color.WHITE else Color.parseColor("#333333"))
+            tvDuration.setTextColor(if (item.isActive) Color.WHITE else Color.parseColor("#777777"))
             tvPosition.text = "${item.position}."
             tvDuration.text = item.duration
+
+            iconArea.setImageResource(R.drawable.ic_check)
         }
     }
 

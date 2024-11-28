@@ -17,6 +17,7 @@ import com.example.pomodoro.handler.PermissionCallback
 import com.example.pomodoro.handler.TimerPermissionHandler
 import com.example.pomodoro.service.TimerService
 import com.example.pomodoro.service.TimerState
+import java.util.Locale
 
 class TrackFragment : Fragment(), PermissionCallback {
     private var _binding: FragmentTrackBinding? = null
@@ -132,7 +133,7 @@ class TrackFragment : Fragment(), PermissionCallback {
     private fun updateTimerDisplay(timeLeftInMillis: Long) {
         val minutes = (timeLeftInMillis / 1000) / 60
         val seconds = (timeLeftInMillis / 1000) % 60
-        binding.textView2.text = String.format("%02d:%02d", minutes, seconds)
+        binding.textView2.text = String.format(Locale.ROOT, "%02d:%02d", minutes, seconds)
     }
 
     private fun updateTimerState(state: TimerState) {
